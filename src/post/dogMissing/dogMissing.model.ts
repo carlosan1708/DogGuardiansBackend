@@ -1,12 +1,12 @@
 import * as mongoose from 'mongoose';
 
-export const DogMissingPostSchema = new mongoose.Schema({
+export const DogsMissingSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
   breed: { type: String, required: true },
 });
 
-export interface DogMissingPost extends mongoose.Document {
+export interface DogsMissing extends mongoose.Document {
   id: string;
   title: string;
   description: string;

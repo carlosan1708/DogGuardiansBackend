@@ -10,7 +10,9 @@ describe('Users Controller', () => {
     }).compile();
   });
   it('should be defined', () => {
-    const controller: UsersController = module.get<UsersController>(UsersController);
+    const controller: UsersController = module.get<UsersController>(
+      UsersController,
+    );
     expect(controller).toBeDefined();
   });
 });

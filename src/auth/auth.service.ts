@@ -6,63 +6,55 @@ import { JwtPayload } from './interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService,
+  ) {}
 
-    constructor(private usersService: UsersService, private jwtService: JwtService) {
+  async validateUserByPassword(loginAttempt: LoginUserDto) {
+    // This will be used for the initial login
+    const userToAttempt = await this.usersService.findOneByEmail(
+      loginAttempt.email,
+    );
 
-    }
-
-    async validateUserByPassword(loginAttempt: LoginUserDto) {
-
-        // This will be used for the initial login
-        const userToAttempt = await this.usersService.findOneByEmail(loginAttempt.email);
-
-        return new Promise((resolve) => {
-
-            // Check the supplied password against the hash stored for this email address
-            userToAttempt.checkPassword(loginAttempt.password, (err, isMatch) => {
-
-                if (err) { throw new UnauthorizedException(); }
-
-                if (isMatch) {
-                    // If there is a successful match, generate a JWT for the user
-                    resolve(this.createJwtPayload(userToAttempt));
-
-                } else {
-                    throw new UnauthorizedException();
-                }
-
-            });
-
-        });
-
-    }
-
-    async validateUserByJwt(payload: JwtPayload) {
-
-        // This will be used when the user has already logged in and has a JWT
-        const user = await this.usersService.findOneByEmail(payload.email);
-
-        if (user) {
-            return this.createJwtPayload(user);
-        } else {
-            throw new UnauthorizedException();
+    return new Promise((resolve, reject) => {
+      // Check the supplied password against the hash stored for this email address
+      userToAttempt.checkPassword(loginAttempt.password, (err, isMatch) => {
+        if (err) {
+          reject(new UnauthorizedException());
         }
 
+        if (isMatch) {
+          // If there is a successful match, generate a JWT for the user
+          resolve(this.createJwtPayload(userToAttempt));
+        } else {
+          reject(new UnauthorizedException());
+        }
+      });
+    });
+  }
+
+  async validateUserByJwt(payload: JwtPayload) {
+    // This will be used when the user has already logged in and has a JWT
+    const user = await this.usersService.findOneByEmail(payload.email);
+
+    if (user) {
+      return this.createJwtPayload(user);
+    } else {
+      throw new UnauthorizedException();
     }
+  }
 
-    createJwtPayload(user) {
+  createJwtPayload(user) {
+    const data: JwtPayload = {
+      email: user.email,
+    };
 
-        const data: JwtPayload = {
-            email: user.email,
-        };
+    const jwt = this.jwtService.sign(data);
 
-        const jwt = this.jwtService.sign(data);
-
-        return {
-            expiresIn: 3600,
-            token: jwt,
-        };
-
-    }
-
+    return {
+      expiresIn: 3600,
+      token: jwt,
+    };
+  }
 }

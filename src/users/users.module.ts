@@ -7,7 +7,7 @@ import { UserSchema } from './user.model';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{name: 'User', schema: UserSchema}]),
+    MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
     PassportModule.register({ defaultStrategy: 'jwt', session: false }),
   ],
   exports: [UsersService],

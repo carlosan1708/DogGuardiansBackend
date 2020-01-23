@@ -5,25 +5,26 @@ import {
   Get,
   Param,
   Patch,
-  Delete, UseGuards,
+  Delete,
+  UseGuards,
 } from '@nestjs/common';
 
-import { DogMissingPostsService } from './dogMissingPosts.service';
+import { DogsMissingService } from './dogsMissing.service';
 import { Logger } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
-@Controller('dogMissingPost')
-export class DogMissingPostsController {
-  constructor(private readonly dogMissingPostsService: DogMissingPostsService) {}
+@Controller('post/dogMissing')
+export class DogsMissingController {
+  constructor(private readonly dogMissingService: DogsMissingService) {}
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
-  async addDogMissingPost(
+  async addDogsMissing(
     @Body('title') dogMissingTitle: string,
     @Body('description') dogMissingDesc: string,
     @Body('breed') dogMissingBreed: string,
   ) {
-    const generatedId = await this.dogMissingPostsService.insertDogMissingPost(
+    const generatedId = await this.dogMissingService.insertDogsMissing(
       dogMissingTitle,
       dogMissingDesc,
       dogMissingBreed,
@@ -32,26 +33,26 @@ export class DogMissingPostsController {
   }
 
   @Get()
-  async getAllDogMissingPosts() {
-    const dogMissingPosts = await this.dogMissingPostsService.getDogMissingPosts();
-    return dogMissingPosts;
+  async getAllDogsMissing() {
+    const dogMissing = await this.dogMissingService.getDogsMissing();
+    return dogMissing;
   }
 
   @Get(':id')
-  getDogMissingPost(@Param('id') dogMissingId: string) {
+  getDogsMissing(@Param('id') dogMissingId: string) {
     Logger.log('dogMissing Id', dogMissingId);
-    return this.dogMissingPostsService.getSingleDogMissingPost(dogMissingId);
+    return this.dogMissingService.getSingleDogsMissing(dogMissingId);
   }
 
   @Patch(':id')
   @UseGuards(AuthGuard('jwt'))
-  async updateDogMissingPost(
+  async updateDogsMissing(
     @Param('id') dogMissingId: string,
     @Body('title') dogMissingTitle: string,
     @Body('description') dogMissingDesc: string,
     @Body('breed') dogMissingBreed: string,
   ) {
-    await this.dogMissingPostsService.updateDogMissingPost(
+    await this.dogMissingService.updateDogsMissing(
       dogMissingId,
       dogMissingTitle,
       dogMissingDesc,
@@ -62,8 +63,8 @@ export class DogMissingPostsController {
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
-  async removeDogMissingPost(@Param('id') dogMissingId: string) {
-    await this.dogMissingPostsService.deleteDogMissingPost(dogMissingId);
+  async removeDogsMissing(@Param('id') dogMissingId: string) {
+    await this.dogMissingService.deleteDogsMissing(dogMissingId);
     return null;
   }
 }

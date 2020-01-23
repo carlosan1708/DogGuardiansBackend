@@ -10,7 +10,7 @@ import { PassportModule } from '@nestjs/passport';
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt', session: false }),
     JwtModule.register({
-      secretOrPrivateKey: 'thisismykickasssecretthatiwilltotallychangelater',
+      secretOrPrivateKey:'secretsecret1234',
       signOptions: {
         expiresIn: 3600,
       },

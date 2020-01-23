@@ -3,16 +3,14 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { DogMissingPostsModule } from './dogMissingPost/dogMissingPosts.module';
+import { DogsMissingModule } from './post/dogMissing/dogsMissing.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    DogMissingPostsModule,
-    MongooseModule.forRoot(
-      'mongodb://localhost/mongodb',
-    ),
+    DogsMissingModule,
+    MongooseModule.forRoot('mongodb://localhost/mongodb'),
     AuthModule,
     UsersModule,
   ],
