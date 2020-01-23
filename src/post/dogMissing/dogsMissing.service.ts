@@ -11,11 +11,12 @@ export class DogsMissingService {
     private readonly dogMissingModel: Model<DogsMissing>,
   ) {}
 
-  async insertDogsMissing(title: string, desc: string, breed: string) {
+  async insertDogsMissing(title: string, desc: string, breed: string, imageId: string) {
     const newDogsMissing = new this.dogMissingModel({
       title,
       description: desc,
       breed,
+      imageId
     });
     const result = await newDogsMissing.save();
     return result.id as string;
